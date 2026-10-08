@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>High Roller</title>
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --ink: #1c1915;
+    --muted: #6d665c;
+    --line: #ddd6c8;
+    --card: #fffdf8;
+    --plus: #2f6b4f;
+    --minus: #8a5a12;
+    --neg: #8d3a32;
+    --phys: #2c4f6e;
+    --phrase: #5a3d72;
+    --rand: #3d5c45;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 17px/1.45 Georgia, "Iowan Old Style", Palatino, serif;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 6px; }
+  .lede { color: var(--muted); margin: 0 0 22px; font-size: 15.5px; }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  button {
+    font: 15px/1 Georgia, serif;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover { background: #f7f3ea; }
+  button.primary { background: var(--ink); color: #f7f3ea; border-color: var(--ink); }
+  button.primary:hover { background: #333; }
+  .sheet { background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .row {
+    display: grid;
+    grid-template-columns: 230px 1fr auto;
+    gap: 12px;
+    align-items: start;
+    padding: 14px 16px;
+    border-top: 1px solid var(--line);
+  }
+  .row:first-child { border-top: 0; }
+  .label { font-size: 13px; letter-spacing: 0.02em; text-transform: uppercase; padding-top: 3px; }
+  .plus { color: var(--plus); }
+  .minus { color: var(--minus); }
+  .neg { color: var(--neg); }
+  .phys { color: var(--phys); }
+  .phrase { color: var(--phrase); }
+  .rand { color: var(--rand); }
+  .value { font-size: 18px; }
+  .reroll { padding: 4px 8px; font-size: 13px; }
+  .note { margin-top: 14px; color: var(--muted); font-size: 13.5px; }
+  .err { color: var(--neg); }
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 1fr auto; }
+    .label { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>High Roller</h1>
+  <p class="lede">Six lines for a fantasy character. Physical traits and phrases are not repeated until this browser's pile runs out.</p>
+  <div class="bar">
+    <button class="primary" id="roll">Roll a character</button>
+    <button id="copy">Copy sheet</button>
+    <button id="reset">Reset used piles</button>
+  </div>
+  <div class="sheet" id="sheet"></div>
+  <p class="note" id="note">Loading lists…</p>
+</main>
+<script>
+const FIELDS = [
+  { key: "plus", label: "Positive trait", cls: "plus", file: "data/positive.txt" },
+  { key: "minus", label: "Positive trait, with a cost", cls: "minus", file: "data/positive-cost.txt" },
+  { key: "neg", label: "Negative trait", cls: "neg", file: "data/negative.txt" },
+  { key: "phys", label: "Unique physical trait", cls: "phys", file: "data/physical.txt", unique: true },
+  { key: "phrase", label: "Turn of phrase", cls: "phrase", file: "data/phrase.txt", unique: true },
+  { key: "rand", label: "Nothing to do with the story", cls: "rand", file: "data/unrelated.txt", count: 2 }
+];
+
+const STORE = "high-roller-used";
+const pools = {};
+const current = {};
+
+function loadUsed() {
+  try { return JSON.parse(sessionStorage.getItem(STORE)) || { phys: [], phrase: [] }; }
+  catch (e) { return { phys: [], phrase: [] }; }
+}
+function saveUsed(used) {
+  sessionStorage.setItem(STORE, JSON.stringify(used));
+}
+function parseList(text) {
+  return text.split(/\r?\n/)
+    .map(line => line.split("\t")[0].trim())
+    .filter(line => line && !line.startsWith("#"));
+}
+function pick(pool, usedList) {
+  const used = new Set(usedList || []);
+  let open = pool.filter(x => !used.has(x));
+  if (!open.length) {
+    open = pool.slice();
+    if (usedList) usedList.length = 0;
+  }
+  const choice = open[Math.floor(Math.random() * open.length)];
+  if (usedList) usedList.push(choice);
+  return choice;
+}
+function rollField(field, used) {
+  const pool = pools[field.key];
+  if (field.count) {
+    const a = pick(pool);
+    let b = pick(pool);
+    let guard = 0;
+    while (b === a && pool.length > 1 && guard++ < 8) b = pick(pool);
+    current[field.key] = [a, b];
+  } else if (field.unique) {
+    current[field.key] = pick(pool, used[field.key]);
+  } else {
+    current[field.key] = pick(pool);
+  }
+}
+function rollAll() {
+  const used = loadUsed();
+  FIELDS.forEach(field => rollField(field, used));
+  saveUsed(used);
+  render();
+}
+function textOf(key) {
+  const value = current[key];
+  return Array.isArray(value) ? value.join("; ") : value;
+}
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "\u0026amp;")
+    .replace(/</g, "\u0026lt;")
+    .replace(/>/g, "\u0026gt;");
+}
+function render() {
+  document.getElementById("sheet").innerHTML = FIELDS.map(field => `
+    <div class="row">
+      <div class="label ${field.cls}">${field.label}</div>
+      <div class="value">${escapeHtml(textOf(field.key))}</div>
+      <button class="reroll" data-key="${field.key}">reroll</button>
+    </div>
+  `).join("");
+  const used = loadUsed();
+  const leftP = Math.max(0, pools.phys.length - used.phys.length);
+  const leftC = Math.max(0, pools.phrase.length - used.phrase.length);
+  document.getElementById("note").textContent =
+    `Unused this session: ${leftP} physical traits, ${leftC} phrases. Refresh keeps the used pile. Reset clears it.`;
+}
+function sheetText() {
+  return [
+    "Positive trait: " + textOf("plus"),
+    "Positive trait (with a cost): " + textOf("minus"),
+    "Negative trait: " + textOf("neg"),
+    "Unique physical trait: " + textOf("phys"),
+    "Turn of phrase: " + textOf("phrase"),
+    "Nothing to do with the story: " + textOf("rand")
+  ].join("\n");
+}
+
+document.getElementById("roll").onclick = rollAll;
+document.getElementById("reset").onclick = () => {
+  sessionStorage.removeItem(STORE);
+  rollAll();
+};
+document.getElementById("copy").onclick = async () => {
+  const text = sheetText();
+  try {
+    await navigator.clipboard.writeText(text);
+    document.getElementById("copy").textContent = "Copied";
+    setTimeout(() => { document.getElementById("copy").textContent = "Copy sheet"; }, 1200);
+  } catch (e) {
+    prompt("Copy this:", text);
+  }
+};
+document.getElementById("sheet").onclick = (event) => {
+  const button = event.target.closest(".reroll");
+  if (!button) return;
+  const field = FIELDS.find(item => item.key === button.dataset.key);
+  const used = loadUsed();
+  rollField(field, used);
+  saveUsed(used);
+  render();
+};
+
+Promise.all(FIELDS.map(async field => {
+  const response = await fetch(field.file);
+  if (!response.ok) throw new Error(field.file);
+  pools[field.key] = parseList(await response.text());
+})).then(rollAll).catch(err => {
+  document.getElementById("note").className = "note err";
+  document.getElementById("note").textContent =
+    "Could not load the lists. Open this from the site, not as a saved file. " + err.message;
+});
+</script>
+</body>
+</html>
