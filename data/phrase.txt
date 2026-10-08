@@ -1,4 +1,6 @@
-# One line, as they would say it. Include the quotation marks.
+# A line they say, or a manner of speaking. Either is fine.
+# Fixed lines keep the quotation marks. Quirks do not.
+# One entry per line. These should not be reused on another character.
 "We'll see about that."
 "Not my table."
 "Say it plainer."
@@ -39,3 +41,69 @@
 "Not in this coat."
 "I left the lamp on for a reason."
 "Taste it before you swear at it."
+never uses a contraction
+calls everyone cousin, related or not
+answers a question with a question
+drops the last word of a sentence and expects you to have it
+refers to themselves in the third person
+adds "mind" to the end of an order
+cannot say "gold" and says "the yellow" instead
+rhymes when nervous, badly
+addresses the fire, the door, and the horse, but not always the people
+gives every distance as a day's walk
+says "we" when they mean "I"
+repeats the last word the other person said before answering
+speaks formally to animals and coarsely to nobles
+begins every answer with "well"
+will not use a name, only a trade
+whispers the important word and says the rest aloud
+translates idioms from a language no one else speaks
+will not say "dead" and says "gone ahead"
+adds "as my mother had it" to facts their mother could not have known
+hums the shape of a word they do not want to say
+counts on their fingers while they talk
+swears only by vegetables
+calls every inn the same name
+speaks as if reading from a book that does not exist
+puts "pardon" in front of an insult
+will not be interrupted, and starts the sentence over
+uses the plural for a single tool
+says "presently" and means never
+asks permission of the room before sitting
+calls rain "him"
+finishes other people's proverbs wrong, on purpose
+speaks softer the angrier they are
+will not say a price out loud and writes it in the dust
+adds a saint's name to ordinary objects
+talks to the left of the person they mean
+uses "one" instead of "I"
+cannot tell a story without a side road
+says "bless you" when no one has sneezed
+replaces curses with the names of tools
+speaks in short lists
+will not answer until they have repeated the question
+calls children "captain"
+drops into another accent when lying
+says "we shall see" and has already decided
+addresses everyone as if they are slightly deaf
+will not use the word "no" and says "another day"
+puts the verb at the end, like a lesson half learned
+laughs once, as punctuation
+calls the moon "she" and the sun "the other one"
+asks "is that the way of it" after news
+will not speak while eating, and eats during other people's news
+says "by your leave" and does not wait for it
+names colors wrong, consistently
+whistles the pause where a name should be
+calls every dog the name of their first dog
+speaks to nobles as if they were slow children
+adds "in a manner of speaking" to things that are plain
+will not swear, and says "well, then" in the same place
+starts stories in the middle
+calls money "that"
+uses thee and you in the same sentence, by rank they invent
+says "I should not like to say" and then says it
+hums between clauses
+will not point, and describes the direction instead
+calls yesterday "the late day"
+speaks as if a clerk is writing it down

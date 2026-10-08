@@ -86,7 +86,7 @@ const FIELDS = [
   { key: "minus", label: "Positive trait, with a cost", cls: "minus", file: "data/positive-cost.txt" },
   { key: "neg", label: "Negative trait", cls: "neg", file: "data/negative.txt" },
   { key: "phys", label: "Unique physical trait", cls: "phys", file: "data/physical.txt", unique: true },
-  { key: "phrase", label: "Turn of phrase", cls: "phrase", file: "data/phrase.txt", unique: true },
+  { key: "phrase", label: "Manner of speech", cls: "phrase", file: "data/phrase.txt", unique: true },
   { key: "rand", label: "Nothing to do with the story", cls: "rand", file: "data/unrelated.txt", count: 2 }
 ];
 
@@ -159,7 +159,7 @@ function render() {
   const leftP = Math.max(0, pools.phys.length - used.phys.length);
   const leftC = Math.max(0, pools.phrase.length - used.phrase.length);
   document.getElementById("note").textContent =
-    `Unused this session: ${leftP} physical traits, ${leftC} phrases. Refresh keeps the used pile. Reset clears it.`;
+    `Unused this session: ${leftP} physical traits, ${leftC} speech quirks. Refresh keeps the used pile. Reset clears it.`;
 }
 function sheetText() {
   return [
@@ -167,7 +167,7 @@ function sheetText() {
     "Positive trait (with a cost): " + textOf("minus"),
     "Negative trait: " + textOf("neg"),
     "Unique physical trait: " + textOf("phys"),
-    "Turn of phrase: " + textOf("phrase"),
+    "Manner of speech: " + textOf("phrase"),
     "Nothing to do with the story: " + textOf("rand")
   ].join("\n");
 }

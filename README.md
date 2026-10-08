@@ -6,10 +6,10 @@ A fantasy character roller. Six lines, no prose.
 - Positive trait, with a cost
 - Negative trait
 - One physical trait that should not describe anyone else
-- One turn of phrase
+- One manner of speech: a fixed line, or a quirk of how they talk
 - Two mundane interests that have nothing to do with the plot
 
-Physical traits and phrases are remembered in this browser until the pile is empty, or until you hit Reset.
+Physical traits and manners of speech are remembered in this browser until the pile is empty, or until you hit Reset.
 
 ## Add a line
 
